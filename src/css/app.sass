@@ -1,1 +1,95 @@
-// app global css in Sass form
+body
+  padding: 0px
+  margin: 0px
+  font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande", "Lucida Sans", Arial, sans-serif
+
+#heading
+  position: fixed
+  top: 0px
+  display: inline-block
+  margin: 0px
+  padding: 20px
+  height: 80px
+  width: 100%
+  box-sizing: border-box
+  background-color: #35495e
+  color: #41b883
+
+  h1
+    margin: 0px
+
+#app
+  width: 100%
+
+#students-table
+  width: 100%
+  height: calc(100% - 110px)
+  margin-top: 80px
+  margin-bottom: 30px
+  overflow-y: scroll
+  border-collapse: collapse
+
+  tr
+    &:nth-child(2n)
+      background-color: #eeeeee
+
+    &:nth-child(1)
+      background-color: #41b883
+      color: white
+      font-size: 1.2em
+      font-weight: bold
+      padding: 10px 0px 10px 0px
+
+  td
+    padding: 5px
+
+    &:last-child
+      padding: 0px
+      text-align: center
+
+#delete-student-button
+  margin: 0px
+  padding: 2px
+  display: inline-block
+  height: 30px
+  width: 100%
+  background-color: #ec7063
+  color: white
+  border: none
+  text-align: center
+  font-size: 1em
+  cursor: pointer
+
+#add-student-form
+  position: fixed
+  bottom: 0px
+  height: 40px
+  width: 100%
+  display: flex
+  align-items: stretch
+  border: none
+  border-top: 1px solid #41b883
+
+.add-student-form-input
+  border: none
+  border-right: 1px solid #41b883
+  border-collapse: collapse
+  padding: 10px
+  flex: 1 1 20%
+
+#reload-students
+  border: none
+  background-color: #41b883
+  color: white
+  cursor: pointer
+  padding: 10px
+  flex: 0 0 40px
+
+#add-student-submit
+  border: none
+  background-color: #41b883
+  color: white
+  cursor: pointer
+  padding: 10px
+  flex-grow: 1
+  flex-shrink: 1
