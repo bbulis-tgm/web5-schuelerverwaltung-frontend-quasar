@@ -9,31 +9,9 @@ export default ({ app, Vue }) => {
 
   app.data = () => {
     return {
-      apiBase: 'http://192.168.204.129', // Change this to the base URL of the REST API
+      apiBase: 'http://medt.school.bulis.xyz/api', // Change this to the base URL of the REST API
 
-      students: [
-        {
-          firstname: 'Simon',
-          lastname: 'Schachenhofer',
-          schoolclass: '5CHITM',
-          subject: 'MEDT',
-          rating: 0
-        },
-        {
-          firstname: 'Markus',
-          lastname: 'Frank',
-          schoolclass: '5CHIT',
-          subject: 'SYT',
-          rating: 0
-        },
-        {
-          firstname: 'Benjamin',
-          lastname: 'Bulis',
-          schoolclass: '5CHITM',
-          subject: 'MEDT',
-          rating: 0
-        }
-      ]
+      students: []
     }
   }
 
@@ -164,5 +142,9 @@ export default ({ app, Vue }) => {
         })
       }
     }
+  }
+
+  app.mounted = function () {
+    this.reload()
   }
 }
