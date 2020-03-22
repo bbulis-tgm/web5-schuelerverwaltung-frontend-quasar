@@ -760,3 +760,74 @@ module.exports = function (ctx) {
 }
 ``````
 
+
+
+### Screenshots
+
+Die Web-App ist responsiv und passt sich an verschiedene Bildschirmgrößen an. Ich habe deshalb die Screenshots in jeweils drei unterschiedlichen Bildschirmgrößen gemacht:
+
+- Desktop-PC
+- Tablet (iPad) – über die Firefox-Entwicklerkonsole emuliert
+- Smartphone (iPhone X) – über die Firefox-Entwicklerkonsole emuliert
+
+#### Layout der App
+
+Am Desktop-PC:
+
+![](img/layoutLarge.png)
+
+Am Tablet:
+
+![](img/layoutMedium.png)
+
+Am Smartphone:
+
+![](img/layoutSmall.png)
+
+
+
+#### Bewertete Schüler
+
+Am Desktop-PC:
+
+![](img/ratedLarge.png)
+
+Am Tablet:
+
+![](img/ratedMedium.png)
+
+Am Smartphone:
+
+![](img/ratedSmall.png)
+
+
+
+#### Fehlermeldung (*Error*)
+
+Am Desktop-PC:
+
+![](img/errorLarge.png)
+
+Am Tablet:
+
+![](img/errorMedium.png)
+
+Am Smartphone:
+
+![](img/errorSmall.png)
+
+
+
+#### Warnung (*Warning*)
+
+Am Desktop-PC:
+
+![](img/warningLarge.png)
+
+Am Tablet:
+
+![](img/warningMedium.png)
+
+Am Smartphone:
+
+![](img/warningSmall.png)
