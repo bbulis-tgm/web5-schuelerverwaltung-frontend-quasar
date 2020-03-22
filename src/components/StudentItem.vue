@@ -30,8 +30,10 @@ export default {
   },
 
   props: {
-    index: Number,
     student: {
+      id: {
+        type: Number
+      },
       firstname: {
         type: String,
         default: ''
@@ -56,12 +58,20 @@ export default {
   },
 
   methods: {
+    /**
+     * Rate the student with a rating in the range [0, 5]
+     *
+     * @param {Number} rating - The rating for the student
+     */
     rate: function (rating) {
-      this.$root.rateStudent(this.student.index, rating)
+      this.$root.rateStudent(this.student.id, rating)
     },
 
+    /**
+     * Remove the student from the database
+     */
     remove: function () {
-      this.$root.removeStudent(this.student.index)
+      this.$root.removeStudent(this.student.id)
     }
   }
 }

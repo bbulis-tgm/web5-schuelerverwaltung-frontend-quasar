@@ -25,17 +25,23 @@ export default {
   },
 
   methods: {
+    /**
+     * Add a new student to the database. The properties of the new student are read from the input form.
+     * All fields of the input form must be filled out. If that is not the case, an error message will be displayed,
+     * prompting the user to fill out the empty fields.
+     * If the student was added successfully, the form will be reset
+     */
     addStudent: async function () {
       // Check for empty input fields
       if (!(this.firstname === '') && !(this.lastname === '') && !(this.schoolclass === '')) {
         // Call addStudent function of root component
-        this.$root.addStudent(this.firstname, this.lastname, this.schoolclass, this.subject)
-
-        // Reset the form
-        this.firstname = ''
-        this.lastname = ''
-        this.schoolclass = ''
-        this.subject = ''
+        if (await this.$root.addStudent(this.firstname, this.lastname, this.schoolclass, this.subject)) {
+          // Reset the form
+          this.firstname = ''
+          this.lastname = ''
+          this.schoolclass = ''
+          this.subject = ''
+        }
       } else {
         // Show error notification
         this.$q.notify({

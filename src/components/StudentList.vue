@@ -1,6 +1,6 @@
 <template>
   <q-list bordered>
-    <student-item v-for="(student, index) in students" :student="student" :index="index" :key="student.lastname"></student-item>
+    <student-item v-for="student in students" :student="student" :key="student.lastname"></student-item>
   </q-list>
 </template>
 
