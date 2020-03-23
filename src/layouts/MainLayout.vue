@@ -6,6 +6,8 @@
         <q-toolbar-title>
           Schülerverwaltung
         </q-toolbar-title>
+        <q-toggle v-model="$root.successNotifications" label="Benachrichtigungen anzeigen" checked-icon="notifications_active"
+          unchecked-icon="notifications_off" size="lg" color="secondary"></q-toggle>
       </q-toolbar>
     </q-header>
 

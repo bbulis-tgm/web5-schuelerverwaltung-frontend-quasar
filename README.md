@@ -257,7 +257,7 @@ In Bootfiles wird die VueJS-App initialisiert und konfiguriert. Ich habe ein ein
 
 - Es werden die Variablen festgelegt, mit denen die App arbeitet:
 
-  - Zwei `data`-Variablen, nämlich die Liste der Schüler und die URL der dahinterliegenden REST API.
+  - Drei `data`-Variablen, nämlich die Liste der Schüler, die URL der dahinterliegenden REST API und eine Boolean-Variable, die das Anzeigen von Benachrichtigungen festlegt.
   - Eine `computed`-Variable. Dabei handelt sich um eine Variable, die „berechnet“ wird, wenn sie benötigt wird. Hier wird einfach die Schülerliste nach Nachnamen sortiert.
 
 - Es werden Methoden definiert:
@@ -274,6 +274,7 @@ In Bootfiles wird die VueJS-App initialisiert und konfiguriert. Ich habe ein ein
 import StudentItem from '../components/StudentItem'
 import StudentList from '../components/StudentList'
 import StudentInputForm from '../components/StudentInputForm'
+import { Notify } from 'quasar'
 
 export default ({ app, Vue }) => {
   // Add the three custom components to the Vue app
@@ -281,11 +282,27 @@ export default ({ app, Vue }) => {
   Vue.component('student-list', StudentList)
   Vue.component('student-input-form', StudentInputForm)
 
+  // A Headers object that can be used to add the Content-Type header to HTTP requests
+  const jsonHeader = new Headers({
+    'Content-Type': 'application/json'
+  })
+
+  // Register a custom notification type
+  Notify.registerType('success', {
+    icon: 'done',
+    color: 'accent',
+    textColor: 'white',
+    badgeColor: 'white',
+    badgeTextColor: 'accent',
+    position: 'top',
+    timeout: 3000
+  })
+
   app.data = () => {
     return {
       apiBase: 'http://medt.school.bulis.xyz/api', // Change this to the base URL of the REST API
-
-      students: [] // The array that will hold the student objects
+      students: [], // The array that will hold the student objects
+      successNotifications: true // Display or hide notifications on successful operations (e.g. a student was successfully rated)
     }
   }
 
@@ -310,9 +327,6 @@ export default ({ app, Vue }) => {
      * @returns {Boolean} true if the student was added successfully, false otherwise
      */
     addStudent: async function (firstname, lastname, schoolclass, subject) {
-      const headers = new Headers()
-      headers.append('Content-Type', 'application/json')
-
       try {
         // Send a HTTP POST request to the API
         const resp = await fetch(`${this.apiBase}/student`, {
@@ -324,12 +338,19 @@ export default ({ app, Vue }) => {
             subject: subject,
             rating: 0 // Default rating is always 0
           }),
-          headers: headers
+          headers: jsonHeader
         })
 
         if (resp.ok) {
           // Reload the students from the API so that the new student is also included
           this.reload()
+          if (this.successNotifications) {
+            this.$q.notify({
+              type: 'success',
+              message: `${firstname} ${lastname} wurde hinzugefügt`,
+              group: 'ADD_STUDENT_DONE'
+            })
+          }
           return true
         } else {
           // Display an error message
@@ -385,18 +406,32 @@ export default ({ app, Vue }) => {
 
       // Find the student in the array and update the rating
       const s = this.students.find(elem => elem.id === id)
+      if (s === undefined) {
+        console.error(`Could not find student with ID ${id}`)
+        return false
+      }
       s.rating = rating
 
       try {
         // Send a PUT request to the server including the new student
         const resp = await fetch(`${this.apiBase}/student/${id}`, {
           method: 'PUT',
-          body: JSON.stringify(s, ['firstname', 'lastname', 'schoolclass', 'subject', 'rating']) // Only include those 5 properties in the PUT request
+          body: JSON.stringify(s, ['firstname', 'lastname', 'schoolclass', 'subject', 'rating']), // Only include those 5 properties in the PUT request
+          headers: jsonHeader
         })
 
         if (resp.ok) {
           // Reload the students from the API so that the student has the new rating
           this.reload()
+          if (this.successNotifications) {
+            this.$q.notify({
+              type: 'success',
+              message: rating > 0
+                ? `${s.firstname} ${s.lastname} wurde mit ${rating} ${rating === 1 ? 'Punkt' : 'Punkten'} bewertet`
+                : `Die Bewertung für ${s.firstname} ${s.lastname} wurde auf 0 Punkte zurückgesetzt`,
+              group: 'RATE_STUDENT_DONE'
+            })
+          }
           return true
         } else {
           // Display an error message
@@ -474,6 +509,13 @@ export default ({ app, Vue }) => {
      * @returns {Boolean} true if the student was removed successfully, false otherwise
      */
     removeStudent: async function (id) {
+      // Find the student in the array
+      const student = this.students.find(elem => elem.id === id)
+      if (student === undefined) {
+        console.error(`Could not find student with ID ${id}`)
+        return false
+      }
+
       try {
         // Send the DELETE request to the server
         const resp = await fetch(`${this.apiBase}/student/${id}`, {
@@ -483,6 +525,13 @@ export default ({ app, Vue }) => {
         if (resp.ok) {
           // Reload the student data so that the new student is removed
           this.reload()
+          if (this.successNotifications) {
+            this.$q.notify({
+              type: 'success',
+              message: `${student.firstname} ${student.lastname} wurde entfernt`,
+              group: 'REMOVE_STUDENT_DONE'
+            })
+          }
           return true
         } else {
           // Display an error message
@@ -536,6 +585,8 @@ Was im [Bootfile](#Bootfile) noch fehlt, ist die Darstellung der App. Das habe i
         <q-toolbar-title>
           Schülerverwaltung
         </q-toolbar-title>
+        <q-toggle v-model="$root.successNotifications" label="Benachrichtigungen anzeigen" checked-icon="notifications_active"
+          unchecked-icon="notifications_off" size="lg" color="secondary"></q-toggle>
       </q-toolbar>
     </q-header>
 
@@ -557,11 +608,14 @@ export default {
   }
 }
 </script>
+
 ``````
 
 Hier wird die grundlegende Struktur der Seite festgelegt: Ein `QHeader` mit dem Titel, dann die Seite mit der `StudentList`, und unten ein `QFooter` mit dem `StudentInputForm`-Eingabeformular.
 
-Auch hierbei handelt es sich eigentlich um einen VueJS-Component mit einem eigenen `<script>`-Bereich, in dem Variablen und Methoden definiert werden könnten. Ich habe mich aber dafür entschieden, das stattdessen im Bootfile zu tun.
+Der `QHeader` enthält außerdem noch einen `QToggle` – das ist ein Schalter, mit dem man Benachrichtigungen ein- und ausschalten kann.
+
+Auch bei `MainLayout.vue` handelt es sich eigentlich um einen VueJS-Component mit einem eigenen `<script>`-Bereich, in dem Variablen und Methoden definiert werden könnten. Ich habe mich aber dafür entschieden, das stattdessen im Bootfile zu tun.
 
 
 
@@ -570,7 +624,7 @@ Auch hierbei handelt es sich eigentlich um einen VueJS-Component mit einem eigen
 Damit das Projekt so funktioniert, musste ich die Konfiguration leicht abändern. Die Konfiguration ist in der Datei `quasar.conf.js` festgelegt. Konkret habe ich zwei Dinge ändern müssen:
 
 - Das Bootfile `components.js` eintragen, damit es auch ausgeführt wird
-- Das Plugin `Notify` aktivieren
+- Die Plugins `Notify` und `Dialog` aktivieren
 
 ``````js
 // Configuration for your app
@@ -623,7 +677,8 @@ module.exports = function (ctx) {
 
       // Quasar plugins
       plugins: [
-        'Notify'
+        'Notify',
+        'Dialog'
       ]
     },
 

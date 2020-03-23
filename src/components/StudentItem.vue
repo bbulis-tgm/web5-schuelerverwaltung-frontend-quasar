@@ -7,7 +7,7 @@
     </q-item-section>
 
     <q-item-section>
-      <q-item-label size="2em"><b>{{ student.lastname }}</b>, {{ student.firstname }}</q-item-label>
+      <q-item-label @click="easteregg" size="2em"><b>{{ student.lastname }}</b>, {{ student.firstname }}</q-item-label>
       <q-item-label caption size="1.5em" lines="1">{{ `${student.schoolclass} (${student.subject})` }}</q-item-label>
     </q-item-section>
 
@@ -72,6 +72,18 @@ export default {
      */
     remove: function () {
       this.$root.removeStudent(this.student.id)
+    },
+
+    /**
+     * Display a message about the developer team when one of the three team member's name was clicked
+     */
+    easteregg: function () {
+      if (['Benjamin Bulis', 'Simon Schachenhofer', 'Emre Yesildag'].includes(`${this.student.firstname} ${this.student.lastname}`)) {
+        this.$q.dialog({
+          title: 'Schülerverwaltung',
+          message: 'Eine VueJS/Quasar/NodeJS-App von Benjamin Bulis, Simon Schachenhofer und Emre Yesildag'
+        })
+      }
     }
   }
 }
