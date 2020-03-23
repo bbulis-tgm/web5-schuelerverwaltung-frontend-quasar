@@ -1,13 +1,13 @@
 <template>
   <q-item class="q-my-sm">
     <q-item-section avatar>
-      <q-avatar color="primary" text-color="white">
+      <q-avatar @click="easteregg" color="primary" text-color="white">
         {{ student.firstname.charAt(0) }}
       </q-avatar>
     </q-item-section>
 
     <q-item-section>
-      <q-item-label @click="easteregg" size="2em"><b>{{ student.lastname }}</b>, {{ student.firstname }}</q-item-label>
+      <q-item-label size="2em"><b>{{ student.lastname }}</b>, {{ student.firstname }}</q-item-label>
       <q-item-label caption size="1.5em" lines="1">{{ `${student.schoolclass} (${student.subject})` }}</q-item-label>
     </q-item-section>
 

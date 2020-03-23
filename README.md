@@ -2,9 +2,23 @@
 
 Eine Verwaltungs-App mit Bewertungsfunktion für Schüler.
 
-**Team: Benjamin Bulis, Simon Schachenhofer, Emre Yesildag**
 
 
+## Mitglieder des Teams
+
+- Benjamin Bulis
+- Simon Schachenhofer
+- Emre Yesildag
+
+
+
+## Aufgabenstellung
+
+> Erweitere die Schülerverwaltungs-App aus dem letzten Semester um die Möglichkeit, Schüler nach verschiedenen Kriterien zu bewerten. Verwende dafür ein komponentenbasiertes VueJS-Framework wie zum Beispiel Quasar. Serverseitig kannst du dein NodeJS-Interface aus der letzten Abgabe um die Bewertungen erweitern - der Einsatz einer Datenbank ist nicht verpflichtend.
+
+
+
+## Dokumentation
 
 ### Beschreibung
 
